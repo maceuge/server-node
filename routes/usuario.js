@@ -3,6 +3,7 @@ var app = express();
 var bcrypt = require('bcryptjs');
 
 var Usuario = require('../models/usuario')
+var middleAuth = require('../middlewares/authentication');
 
 // ===================================================
 // Obtener todos los Usuarios
@@ -23,10 +24,11 @@ app.get('/', (req, res, next) => {
     });
 });
 
+
 // ===================================================
 // Crear un nuevo usuario
 // ===================================================
-app.post('/', (req, res) => {
+app.post('/', middleAuth.verifyToken, (req, res) => {
     var body = req.body;
 
     var usuario = new Usuario({
@@ -48,7 +50,8 @@ app.post('/', (req, res) => {
 
         res.status(201).json({
             ok: true,
-            body: usuarioGuardado
+            body: usuarioGuardado,
+            usuarioToken: req.usuario
         });
     });
 });
@@ -56,7 +59,7 @@ app.post('/', (req, res) => {
 // ===================================================
 // Actualizar Usuario
 // ===================================================
-app.put('/:id', (req, res) => {
+app.put('/:id', middleAuth.verifyToken, (req, res) => {
 
     var id = req.params.id;
     var body = req.body;
@@ -100,6 +103,37 @@ app.put('/:id', (req, res) => {
         });
     });
 });
+
+// ===================================================
+// Eliminar Usuario
+// ===================================================
+app.delete('/:id', middleAuth.verifyToken, (req, res) => {
+    var id = req.params.id;
+    var body = req.body;
+
+    Usuario.findByIdAndRemove( id, (err, usuarioEliminado) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                message: 'No existe el usuario solicitado!',
+                errors: err
+            });
+        }
+        if (!usuarioEliminado) {
+            return res.status(400).json({
+                ok: false,
+                message: 'El usuario con el ' + id + ' no existe!',
+                errors: { message: 'No existe un usuario con el ID solicitado!' }
+            });
+        }
+            res.status(200).json({
+                ok: true,
+                usuario: usuarioEliminado
+            });
+
+    });
+});
+
 
 
 module.exports = app;
