@@ -42,7 +42,6 @@ app.post('/', (req, res) => {
         // Generar Token JWT
         var token = jwt.sign({ usuario: usuario }, SEED, { expiresIn: 14400 }); // 4hs
 
-
         res.status(200).json({
             ok: true,
             usuario: usuario,
