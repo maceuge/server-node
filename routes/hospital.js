@@ -8,11 +8,11 @@ var middleAuth = require('../middlewares/authentication');
 // ===================================================
 app.get('/', (req, res) => {
 
-    var desde = req.query.desde || 0;
-    desde = Number(desde);
+    var page = req.query.page || 0;
+    page = Number(page);
 
     Hospital.find({}, 'nombre img')
-        .skip(desde)
+        .skip(page)
         .limit(5)
         .populate('usuario', 'nombre email')
         .exec((err, hospitalDb) => {

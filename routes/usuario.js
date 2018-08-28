@@ -10,30 +10,30 @@ var middleAuth = require('../middlewares/authentication');
 // ===================================================
 app.get('/', (req, res, next) => {
 
-    var desde = req.query.desde || 0;
-        desde = Number(desde);
+    var page = req.query.page || 0;
+    page = Number(page);
 
     Usuario.find({}, 'nombre email img role')
-    .skip(desde)
-    .limit(5)
-    .exec((err, user) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                message: 'Error al cargar Usuarios!',
-                errors: err
-            });
-        }
+        .skip(page)
+        .limit(5)
+        .exec((err, user) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    message: 'Error al cargar Usuarios!',
+                    errors: err
+                });
+            }
 
-        Usuario.count({}, (err, count) => {
-            res.status(200).json({
-                ok: true,
-                usuarios: user,
-                total: count
+            Usuario.count({}, (err, count) => {
+                res.status(200).json({
+                    ok: true,
+                    usuarios: user,
+                    total: count
+                });
             });
+
         });
-
-    });
 });
 
 
@@ -123,7 +123,7 @@ app.delete('/:id', middleAuth.verifyToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
-    Usuario.findByIdAndRemove( id, (err, usuarioEliminado) => {
+    Usuario.findByIdAndRemove(id, (err, usuarioEliminado) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -138,10 +138,10 @@ app.delete('/:id', middleAuth.verifyToken, (req, res) => {
                 errors: { message: 'No existe un usuario con el ID solicitado!' }
             });
         }
-            res.status(200).json({
-                ok: true,
-                usuario: usuarioEliminado
-            });
+        res.status(200).json({
+            ok: true,
+            usuario: usuarioEliminado
+        });
 
     });
 });

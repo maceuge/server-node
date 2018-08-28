@@ -8,48 +8,48 @@ var middleAuth = require('../middlewares/authentication');
 // ===================================================
 app.get('/', (req, res) => {
 
-    var desde = req.query.desde || 0;
-        desde = Number(desde);
+    var page = req.query.page || 0;
+    page = Number(page);
 
     Medico.find({})
-    .skip(desde)
-    .limit(5)
-    .populate('usuario', 'nombre email')
-    .populate('hospital')
-    .exec( (err, medicoDb) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                message: 'No existen registros de medicos',
-                errors: err
-            });
-        }
+        .skip(page)
+        .limit(5)
+        .populate('usuario', 'nombre email')
+        .populate('hospital')
+        .exec((err, medicoDb) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    message: 'No existen registros de medicos',
+                    errors: err
+                });
+            }
 
-        Medico.count({}, (err, count) => {
-            res.status(200).json({
-                ok: true,
-                medicos: medicoDb,
-                total: count
+            Medico.count({}, (err, count) => {
+                res.status(200).json({
+                    ok: true,
+                    medicos: medicoDb,
+                    total: count
+                });
             });
+
         });
-
-    });
 });
 
 // ===================================================
 // Crear Medico
 // ===================================================
-app.post('/', middleAuth.verifyToken, (req, res) => { 
+app.post('/', middleAuth.verifyToken, (req, res) => {
     var body = req.body;
 
-    var medico = new Medico ({
+    var medico = new Medico({
         nombre: body.nombre,
         img: body.img,
         usuario: req.usuario._id,
         hospital: body.hospital
     });
 
-    medico.save( (err, medicoGuardado) => {
+    medico.save((err, medicoGuardado) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -73,7 +73,7 @@ app.put('/:id', middleAuth.verifyToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
-    Medico.findById(id, 'nombre img usuario hospital').exec( (err, medico) => {
+    Medico.findById(id, 'nombre img usuario hospital').exec((err, medico) => {
 
         if (err) {
             return res.status(500).json({
@@ -117,7 +117,7 @@ app.put('/:id', middleAuth.verifyToken, (req, res) => {
 app.delete('/:id', middleAuth.verifyToken, (req, res) => {
     var id = req.params.id;
 
-    Medico.findByIdAndRemove( id, (err, medicoEliminado) => {
+    Medico.findByIdAndRemove(id, (err, medicoEliminado) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -132,10 +132,10 @@ app.delete('/:id', middleAuth.verifyToken, (req, res) => {
                 errors: { message: 'No existe un medico con el ID solicitado!' }
             });
         }
-            res.status(200).json({
-                ok: true,
-                medico: medicoEliminado
-            });
+        res.status(200).json({
+            ok: true,
+            medico: medicoEliminado
+        });
     });
 });
 
