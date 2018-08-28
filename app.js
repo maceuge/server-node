@@ -14,6 +14,7 @@ var hospitalRoutes = require('./routes/hospital');
 var medicoRoutes = require('./routes/medico');
 var busquedaRoutes = require('./routes/busqueda');
 var uploadRoutes = require('./routes/upload');
+var imagesRoutes = require('./routes/imagenes');
 
 
 // Iniciar Body-Parser
@@ -28,7 +29,14 @@ mongoose.connection.openUri('mongodb://localhost:27017/HospitalDB', (err, res) =
     console.log('Base de Datos: \x1b[32m%s\x1b[0m', 'OnLine!');
 });
 
+// Server Index Config (es para ver la carpeta "uploads" desde navegador con todas sus imagenes)
+// El servido comparte su carpeta imagenes para que uno pueda acceder a ella 
+var serveIndex = require('serve-index');
+app.use(express.static(__dirname + '/'))
+app.use('/uploads', serveIndex(__dirname + '/uploads'));
+
 // Rutas
+app.use('/img', imagesRoutes);
 app.use('/upload', uploadRoutes);
 app.use('/busqueda', busquedaRoutes);
 app.use('/medico', medicoRoutes);

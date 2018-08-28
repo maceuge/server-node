@@ -57,22 +57,12 @@ app.put('/:tipo/:id', (req, res, next) => {
     // Mover el Archivo del Temporal a un Path
     var path = `./uploads/${ tipo }/${ nombreArchivo }`;
 
-    archivo.mv(path, err => {
+    subirPorTipo(tipo, id, nombreArchivo, res, path, archivo);
 
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                message: 'No se pudo mover el archivo',
-                error: err
-            });
-        }
-
-        subirPorTipo(tipo, id, nombreArchivo, res);
-
-    });
 });
 
-function subirPorTipo(tipo, id, nombreArchivo, res) {
+// Funcion unica para asignar el nombre del archivo al usuario etc.. y moverlo a la carpeta correspondiente si todo es OK!
+function subirPorTipo(tipo, id, nombreArchivo, res, path, archivo) {
 
     if (tipo === 'usuario') {
         Usuario.findById(id, (err, usuario) => {
@@ -84,6 +74,15 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                     error: err
                 });
             }
+
+            if (!usuario) {
+                return res.status(400).json({
+                    ok: false,
+                    message: 'El usuario no existe',
+                    errors: { message: 'No existe el usuario con el ID solicitado' }
+                });
+            }
+
             var oldPath = './uploads/usuario/' + usuario.img;
 
             if (fs.existsSync(oldPath)) {
@@ -108,21 +107,150 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                     });
                 }
 
-                res.status(200).json({
+                usuarioUpdate.password = ':)';
+
+                archivo.mv(path, err => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            message: 'No se pudo mover el archivo',
+                            error: err
+                        });
+                    }
+                });
+
+                return res.status(200).json({
                     ok: true,
                     usuario: usuarioUpdate,
+                    old_path: oldPath
+                });
+            });
+
+        });
+    }
+
+    if (tipo === 'medico') {
+        Medico.findById(id, (err, medico) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    message: 'No se encontro o no existe el medico espesificado',
+                    error: err
+                });
+            }
+
+            if (!medico) {
+                return res.status(400).json({
+                    ok: false,
+                    message: 'El medico no existe',
+                    errors: { message: 'No existe el medico con el ID solicitado' }
+                });
+            }
+
+            var oldPath = './uploads/medico/' + medico.img;
+
+            if (fs.existsSync(oldPath)) {
+                fs.unlink(oldPath, (err) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            message: 'No se pudo remover el archivo viejo',
+                            error: err
+                        });
+                    }
+                });
+            }
+            medico.img = nombreArchivo;
+
+            medico.save((err, medicoUpdate) => {
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        message: 'No se pudo actualizar la imagen del medico',
+                        error: err
+                    });
+                }
+
+                archivo.mv(path, err => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            message: 'No se pudo mover el archivo',
+                            error: err
+                        });
+                    }
+                });
+
+                return res.status(200).json({
+                    ok: true,
+                    medico: medicoUpdate,
                     old_path: oldPath
                 });
             });
         });
     }
 
-    if (tipo === 'medico') {
-
-    }
-
     if (tipo === 'hospital') {
+        Hospital.findById(id, (err, hospital) => {
 
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    message: 'No se encontro o no existe el hospital espesificado',
+                    error: err
+                });
+            }
+
+            if (!hospital) {
+                return res.status(400).json({
+                    ok: false,
+                    message: 'El hospital no existe',
+                    errors: { message: 'No existe el hospital con el ID solicitado' }
+                });
+            }
+
+            var oldPath = './uploads/hospital/' + hospital.img;
+
+            if (fs.existsSync(oldPath)) {
+                fs.unlink(oldPath, (err) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            message: 'No se pudo remover el archivo viejo',
+                            error: err
+                        });
+                    }
+                });
+            }
+            hospital.img = nombreArchivo;
+
+            hospital.save((err, hospitalUpdate) => {
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        message: 'No se pudo actualizar la imagen del hospital',
+                        error: err
+                    });
+                }
+
+                archivo.mv(path, err => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            message: 'No se pudo mover el archivo',
+                            error: err
+                        });
+                    }
+                });
+
+                return res.status(200).json({
+                    ok: true,
+                    hospital: hospitalUpdate,
+                    old_path: oldPath
+                });
+            });
+        });
     }
 }
 
