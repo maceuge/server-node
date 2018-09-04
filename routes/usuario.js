@@ -13,7 +13,7 @@ app.get('/', (req, res, next) => {
     var page = req.query.page || 0;
     page = Number(page);
 
-    Usuario.find({}, 'nombre email img role')
+    Usuario.find({}, 'nombre email img role google')
         .skip(page)
         .limit(5)
         .exec((err, user) => {
@@ -76,7 +76,7 @@ app.put('/:id', middleAuth.verifyToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
-    Usuario.findById(id, 'nombre email img role').exec((err, usuario) => {
+    Usuario.findById(id, 'nombre email img role google').exec((err, usuario) => {
 
         if (err) {
             return res.status(500).json({

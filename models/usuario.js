@@ -17,6 +17,6 @@ var usuarioSchema = new Schema({
     google: { type: Boolean, default: false }
 });
 
-usuarioSchema.plugin(uniqueValidator, { message: 'El {PATH} debe de ser unico! Stupido' });
+usuarioSchema.plugin(uniqueValidator, { message: 'El {PATH} debe de ser unico!' });
 
 module.exports = mongoose.model('Usuario', usuarioSchema);
