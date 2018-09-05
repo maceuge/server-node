@@ -1,3 +1,5 @@
 node_modules/
 google-signin-demo/node_modules/
-assets/img/
+uploads/usuario/
+uploads/hospital/
+uploads/medico/
