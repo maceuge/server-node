@@ -4,7 +4,7 @@ var Hospital = require('../models/hospital');
 var middleAuth = require('../middlewares/authentication');
 
 // ===================================================
-// Obtener todos los Hospitales
+// Obtener todos los Hospitales (PAGINADOS)
 // ===================================================
 app.get('/', (req, res) => {
 
@@ -34,6 +34,34 @@ app.get('/', (req, res) => {
 
         });
 });
+
+// ===================================================
+// Obtener todos los Hospitales (SIN PAGINAR)
+// ===================================================
+app.get('/todos', (req, res) => {
+
+    Hospital.find({}, 'nombre img')
+        .populate('usuario', 'nombre email')
+        .exec((err, hospitalDb) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    message: 'No existen registros de hospitales',
+                    errors: err
+                });
+            }
+
+            Hospital.count({}, (err, count) => {
+                res.status(200).json({
+                    ok: true,
+                    hospital: hospitalDb,
+                    total: count
+                });
+            });
+
+        });
+});
+
 
 // ===================================================
 // Obtener Hospital por ID

@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 
     Medico.find({})
         .skip(page)
-        .limit(5)
+        .limit(10)
         .populate('usuario', 'nombre email')
         .populate('hospital')
         .exec((err, medicoDb) => {
@@ -34,6 +34,36 @@ app.get('/', (req, res) => {
             });
 
         });
+});
+
+// ===================================================
+// Obtener un Medico
+// ===================================================
+app.get('/:id', (req, res) => {
+    var id = req.params.id;
+
+    Medico.findById(id).populate('usuario', 'nombre mail img')
+            .populate('hospital')
+            .exec( (err, medicoDb) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    message: 'No existe el Medico',
+                    errors: err
+                });
+            }
+            if (!medicoDb) {
+                return res.status(400).json({
+                    ok: false,
+                    message: 'El medico con el ' + id + ' no existe!',
+                    errors: { message: 'No existe un medico con el ID solicitado!' }
+                });
+            }
+            res.status(200).json({
+                ok: true,
+                medico: medicoDb
+            });
+    });
 });
 
 // ===================================================
