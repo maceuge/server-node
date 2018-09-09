@@ -71,7 +71,7 @@ app.post('/', (req, res) => {
 // ===================================================
 // Actualizar Usuario
 // ===================================================
-app.put('/:id', middleAuth.verifyToken, (req, res) => {
+app.put('/:id', [middleAuth.verifyToken, middleAuth.verifyAdminRoleOrSameUser], (req, res) => {
 
     var id = req.params.id;
     var body = req.body;
@@ -119,7 +119,7 @@ app.put('/:id', middleAuth.verifyToken, (req, res) => {
 // ===================================================
 // Eliminar Usuario
 // ===================================================
-app.delete('/:id', middleAuth.verifyToken, (req, res) => {
+app.delete('/:id', [middleAuth.verifyToken, middleAuth.verifyAdminRole], (req, res) => {
     var id = req.params.id;
     var body = req.body;
 

@@ -26,9 +26,9 @@ app.get('/todo/:busqueda', (req, res, next) => {
             medico: data[1],
             usuario: data[2],
             parametro: busqueda,
-            total_reg_hospitales: data[0].length,
-            total_reg: data[1].length,
-            totuser: data[2].length
+            total_hospitales: data[0].length,
+            total_medicos: data[1].length,
+            total_usuarios: data[2].length
         });
     });
 
