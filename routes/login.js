@@ -75,6 +75,7 @@ app.post('/google', async(req, res) => {
                 email: googleUser.email,
                 img: googleUser.img,
                 google: true,
+                theme: 'default',
                 password: ':)'
             });
 
@@ -154,34 +155,33 @@ app.post('/', (req, res) => {
 // Obtener el MENU segun el ROLE
 // ===================================================
 
-function getMenu (role) {
+function getMenu(role) {
 
-    var menu = [
-        {
-          title: 'Principal',
-          icon: 'mdi mdi-gauge',
-          submenu: [
-            { title: 'Dashboard', url: '/dashboard'},
-            { title: 'Progreso', url: '/progress'},
-            { title: 'Graficos', url: '/graphic1'},
-            { title: 'Promesas', url: '/promesas'},
-            { title: 'Observables', url: '/rxjs'},
-          ]
+    var menu = [{
+            title: 'Principal',
+            icon: 'mdi mdi-gauge',
+            submenu: [
+                { title: 'Dashboard', url: '/dashboard' },
+                { title: 'Progreso', url: '/progress' },
+                { title: 'Graficos', url: '/graphic1' },
+                { title: 'Promesas', url: '/promesas' },
+                { title: 'Observables', url: '/rxjs' },
+            ]
         },
         {
-          title: 'Administracion',
-          icon: 'mdi mdi-account-card-details',
-          submenu: [
-            // { title: 'Usuarios', url: '/usuarios'},
-            { title: 'Hospitales', url: '/hospitales'},
-            { title: 'Medicos', url: '/medicos'}
-          ]
+            title: 'Administracion',
+            icon: 'mdi mdi-account-card-details',
+            submenu: [
+                // { title: 'Usuarios', url: '/usuarios'},
+                { title: 'Hospitales', url: '/hospitales' },
+                { title: 'Medicos', url: '/medicos' }
+            ]
         }
-      ];
+    ];
 
-      if (role === 'ADMIN_ROLE') {
-        menu[1].submenu.unshift( { title: 'Usuarios', url: '/usuarios'} );   
-      }
+    if (role === 'ADMIN_ROLE') {
+        menu[1].submenu.unshift({ title: 'Usuarios', url: '/usuarios' });
+    }
 
     return menu;
 }

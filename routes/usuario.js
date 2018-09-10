@@ -13,7 +13,7 @@ app.get('/', (req, res, next) => {
     var page = req.query.page || 0;
     page = Number(page);
 
-    Usuario.find({}, 'nombre email img role google')
+    Usuario.find({}, 'nombre email img role google theme')
         .skip(page)
         .limit(5)
         .exec((err, user) => {
@@ -48,7 +48,8 @@ app.post('/', (req, res) => {
         email: body.email,
         password: bcrypt.hashSync(body.password, 10),
         img: body.img,
-        role: body.role
+        role: body.role,
+        theme: 'default'
     });
 
     usuario.save((err, usuarioGuardado) => {
@@ -76,7 +77,7 @@ app.put('/:id', [middleAuth.verifyToken, middleAuth.verifyAdminRoleOrSameUser], 
     var id = req.params.id;
     var body = req.body;
 
-    Usuario.findById(id, 'nombre email img role google').exec((err, usuario) => {
+    Usuario.findById(id, 'nombre email img role google theme').exec((err, usuario) => {
 
         if (err) {
             return res.status(500).json({
@@ -96,6 +97,7 @@ app.put('/:id', [middleAuth.verifyToken, middleAuth.verifyAdminRoleOrSameUser], 
         usuario.nombre = body.nombre;
         usuario.email = body.email;
         usuario.role = body.role;
+        usuario.theme = body.theme;
 
         usuario.save((err, usuarioGuardado) => {
             if (err) {
