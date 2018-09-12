@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 
     Hospital.find({}, 'nombre img')
         .skip(page)
-        .limit(5)
+        .limit(10)
         .populate('usuario', 'nombre email')
         .exec((err, hospitalDb) => {
             if (err) {

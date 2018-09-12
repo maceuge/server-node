@@ -15,7 +15,7 @@ app.get('/', (req, res, next) => {
 
     Usuario.find({}, 'nombre email img role google theme')
         .skip(page)
-        .limit(5)
+        .limit(10)
         .exec((err, user) => {
             if (err) {
                 return res.status(500).json({
