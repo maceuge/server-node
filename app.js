@@ -5,6 +5,8 @@ var bodyParser = require('body-parser');
 
 // Inicializar Variables
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 // CORS
 app.use(function(req, res, next) {
@@ -12,6 +14,18 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "POST, PUT, GET, DELETE, OPTIONS");
     next();
+});
+
+// Pruba de Socket
+
+var messages = {
+    nombre: 'Juan Sokete',
+    mensaje: 'Hola como estas?'
+};
+
+io.on('connection', function(socket) {
+    console.log('Un cliente se ha conectado');
+    socket.emit('messages', messages);
 });
 
 // Importar Rutas
@@ -55,6 +69,6 @@ app.use('/', appRoutes);
 
 
 // Escuchar peticiones
-app.listen(3000, () => {
+server.listen(3000, () => {
     console.log('Express Server Puerto: 3000 \x1b[32m%s\x1b[0m', 'OnLine!');
 });
