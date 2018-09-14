@@ -45,8 +45,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-// Conexion a la BD
-mongoose.connection.openUri('mongodb://localhost:27017/HospitalDB', (err, res) => {
+// Conexion a la BD local
+// mongoose.connection.openUri('mongodb://localhost:27017/HospitalDB', (err, res) => {
+//     if (err) throw err;
+//     console.log('Base de Datos: \x1b[32m%s\x1b[0m', 'OnLine!');
+// });
+
+// Conxion Remota
+mongoose.connection.openUri('mongodb://maceuge:test1234@ds155418.mlab.com:55418/anghospitaldb', (err, res) => {
     if (err) throw err;
     console.log('Base de Datos: \x1b[32m%s\x1b[0m', 'OnLine!');
 });
