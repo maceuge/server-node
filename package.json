@@ -4,7 +4,7 @@
     "description": "Servidor de Admin Pro",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon app.js",
+        "start": "node app",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Eugenio Vorontsov",
