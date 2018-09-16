@@ -2,6 +2,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var pusher = require('./config/config').PUSHER;
 
 // Inicializar Variables
 var app = express();
@@ -16,17 +17,25 @@ app.use(function(req, res, next) {
     next();
 });
 
-// Pruba de Socket
 
+// Pusher Config
 var messages = {
-    nombre: 'Juan Sokete',
-    mensaje: 'Hola como estas?'
+    nombre: 'Juan Pusher',
+    mensaje: 'Hola como estas? Soy Otro Pusherrr!'
 };
 
-io.on('connection', function(socket) {
-    console.log('Un cliente se ha conectado');
-    socket.emit('messages', messages);
-});
+pusher.trigger('msg-channel', 'new-msg', messages);
+
+// Pruba de Socket
+// var messages = {
+//     nombre: 'Juan Sokete',
+//     mensaje: 'Hola como estas?'
+// };
+
+// io.on('connection', function(socket) {
+//     console.log('Un cliente se ha conectado');
+//     socket.emit('messages', messages);
+// });
 
 // Importar Rutas
 var appRoutes = require('./routes/app');
